@@ -5,5 +5,9 @@
     <RootNamespace>azure_upload_demo_server</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FileContextCore" Version="3.4.0" />
+  </ItemGroup>
+
 
 </Project>
