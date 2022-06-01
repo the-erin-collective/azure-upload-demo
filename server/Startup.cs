@@ -12,11 +12,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using azure_upload_demo_server.Data;
+using azure_upload_demo_server.Services;
+using SimpleInjector;
+using SimpleInjector.Integration.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using azure_upload_demo_server.Controllers;
 
 namespace azure_upload_demo_server
 {
   public class Startup
   {
+    private Container container = new Container();
+
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
@@ -27,7 +34,15 @@ namespace azure_upload_demo_server
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddControllers();
+      services.AddOptions();
+      services.AddSingleton(container);
+      services.AddControllers()
+          .AddApplicationPart(typeof(DocumentController).Assembly);
+      services.AddSingleton<IControllerActivator>(new SimpleInjectorControllerActivator(container));
+      services.AddSimpleInjector(container, options => {
+        options.AddAspNetCore()
+          .AddControllerActivation();
+      });
       services.AddDbContext<Context>();
     }
 
@@ -38,6 +53,10 @@ namespace azure_upload_demo_server
       {
         app.UseDeveloperExceptionPage();
       }
+
+      app.UseSimpleInjector(container);
+
+      container.Register<DocumentService>(Lifestyle.Scoped);
 
       app.UseHttpsRedirection();
 

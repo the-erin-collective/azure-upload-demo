@@ -15,7 +15,7 @@ namespace azure_upload_demo_server.Data
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
       //Default: JSON-Serializer
-      optionsBuilder.UseFileContextDatabase();
+      optionsBuilder.UseFileContextDatabase("temp-document-store", null, null, null, null);
     }
   }
 }
