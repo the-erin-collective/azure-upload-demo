@@ -1,6 +1,8 @@
 const { Command } = require('commander');
 const tables = require('./modules/tables.ts');
 const help = require('./modules/help.ts');
+const spinner = require('./modules/spinner.ts');
+const api = require('./modules/api.ts');
 
 const programName = 'fic';
 
@@ -43,27 +45,41 @@ program
 program
   .command('list')
   .description('list files in the cloud')
-  .action((arg, options) => {
-    var listResult = 'list...';
-    console.log(listResult);
+  .action(async (arg, options) => {
+    let result = await spinner.start('fetching list of files from the cloud...', 'list of files successfully fetched!', null, async (data) => {
+      let output = api.list().then((data) => { return data; });
+      return output;
+    }).then((data) => {
+      console.log(data);}
+    );
   });
 
 program
   .command('upload')
   .argument('<filepath>', 'path to file being uploaded')
   .description('upload a file to the cloud')
-  .action((arg, options) => {
-    var uploadResult = 'upload...';
-    console.log(uploadResult);
+  .action(async (arg, options) => {
+    let filepath = 'testpath';
+    let result = await spinner.start('uploading ' +  filepath + ' to the cloud...', 'download successful!', filepath, async (filepath) => {
+      let output = api.upload(filepath).then((data) => { return data; });
+      return output;
+    }).then((data) => {
+      console.log(data);}
+    );
   });
   
 program
   .command('download')
   .argument('<filename>', 'name of file being downloaded')
   .description('download a file from the cloud')
-  .action((arg, options) => {
-    var downloadResult = 'download...';
-    console.log(downloadResult);
+  .action(async (arg, options) => {
+    let filename = 'testname';
+    let result = await spinner.start('downloading ' +  filename + ' from the cloud...', 'upload successful!', filename, async (filepath) => {
+      let output = api.download(filepath).then((data) => { return data; });
+      return output;
+    }).then((data) => {
+      console.log(data);}
+    );
   });
 
 program.parse();
