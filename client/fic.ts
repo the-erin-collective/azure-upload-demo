@@ -23,7 +23,7 @@ program
     if(cmd._name === programName){
       header = 'Unrecognized command, try one of these...';
     }
-    return tables.simple(header, help.formatHelp(cmd, helper).trim());
+    return tables.simple(header, help.formatHelp(cmd, helper).trim(), true);
    }
  });
 
@@ -36,7 +36,7 @@ program
        if(prefixIndex === 0){
         errorMessage = errorMessage.substring(errorPrefix.length).trim();
        }
-       write(tables.simple('error', errorMessage));
+       write(tables.simple('error', errorMessage, false));
       }
   });
 

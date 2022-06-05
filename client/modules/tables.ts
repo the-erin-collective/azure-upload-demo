@@ -13,7 +13,7 @@ let simpleDefaults = {
     paddingTop: 0
 };
 
-let simple = (title, body) => {
+let simple = (title, body, breakAfter) => {
     const headers = [{
         value: "",
         alias: title,
@@ -22,7 +22,7 @@ let simple = (title, body) => {
         text: body
     }];
     let table = Table(headers, rows, simpleDefaults).render();
-    return table;
+    return table + (breakAfter ? '\n\n' : '');
 };
 
 module.exports = {
