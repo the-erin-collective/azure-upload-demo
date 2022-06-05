@@ -1,11 +1,11 @@
-﻿using azure_upload_demo_server.Data;
-using azure_upload_demo_server.Models;
+﻿using files_in_cloud_server.Data;
+using files_in_cloud_server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace azure_upload_demo_server.Services
+namespace files_in_cloud_server.Services
 {
   public class DocumentService
   {
@@ -20,6 +20,7 @@ namespace azure_upload_demo_server.Services
 
     public Document CreateUpdate(Document document)
     {
+      document.ContentLength = document.Data.Length;
       var fileData = document.Data;
       if (_context.Documents.Any(d => d.Filename == document.Filename))
       {
@@ -37,12 +38,13 @@ namespace azure_upload_demo_server.Services
     public IEnumerable<Document> ListAll()
     {
       var documents = _context.Documents.ToList();
+
       return documents;
     }
 
-    public Document Download(Guid documentId)
+    public Document Download(string filename)
     {
-      var document = _context.Documents.First(d => d.Id == documentId);
+      var document = _context.Documents.First(d => d.Filename == filename);
       // todo, get data from azure
       document.Data = new byte[] { };
       return document;

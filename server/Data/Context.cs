@@ -1,4 +1,4 @@
-﻿using azure_upload_demo_server.Models;
+﻿using files_in_cloud_server.Models;
 using FileContextCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace azure_upload_demo_server.Data
+namespace files_in_cloud_server.Data
 {
   public class Context : DbContext
   {

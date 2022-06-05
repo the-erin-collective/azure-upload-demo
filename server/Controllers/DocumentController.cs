@@ -1,5 +1,5 @@
-﻿using azure_upload_demo_server.Models;
-using azure_upload_demo_server.Services;
+﻿using files_in_cloud_server.Models;
+using files_in_cloud_server.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace azure_upload_demo_server.Controllers
+namespace files_in_cloud_server.Controllers
 {
   [ApiController]
   [Route("[controller]")]
@@ -28,7 +28,8 @@ namespace azure_upload_demo_server.Controllers
       return "azure-upload-demo server is online.";
     }
 
-    [HttpPost]
+    [HttpPost, HttpGet]
+    [Route("ListAll")]
     public IEnumerable<Document> ListAll()
     {
       var documents = _documentService.ListAll();
@@ -36,6 +37,7 @@ namespace azure_upload_demo_server.Controllers
     }
 
     [HttpPost]
+    [Route("Upload")]
     public Document Upload(Document document)
     {
       document = _documentService.CreateUpdate(document);
@@ -43,7 +45,8 @@ namespace azure_upload_demo_server.Controllers
     }
 
     [HttpPost]
-    public Document Download(Guid documentId)
+    [Route("Download")]
+    public Document Download(string documentId)
     {
       return _documentService.Download(documentId);
     }

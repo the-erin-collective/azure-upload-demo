@@ -11,14 +11,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using azure_upload_demo_server.Data;
-using azure_upload_demo_server.Services;
+using files_in_cloud_server.Data;
+using files_in_cloud_server.Services;
 using SimpleInjector;
 using SimpleInjector.Integration.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using azure_upload_demo_server.Controllers;
+using files_in_cloud_server.Controllers;
 
-namespace azure_upload_demo_server
+namespace files_in_cloud_server
 {
   public class Startup
   {
