@@ -24,16 +24,23 @@ let spin = (options) => {
     return spinner; 
 };
 
-let halt = (spinner, completeText) => {
-    rdl.cursorTo(process.stdout, spinner.width);
-    rdl.clearLine(process.stdout, -1);
-    rdl.cursorTo(process.stdout, 0);
-    process.stdout.write(successSymbol);
-    console.log();
-    clearInterval(spinner.id);
-    if(typeof(completeText) !== "undefined" && completeText.length > 0){    
-        process.stdout.write(completeText);
+let halt = (spinner, completeText, isError = false) => {
+    if(!isError){
+        rdl.cursorTo(process.stdout, spinner.width);
+        rdl.clearLine(process.stdout, -1);
+        rdl.cursorTo(process.stdout, 0);
+        process.stdout.write(successSymbol);
     }
+
+    clearInterval(spinner.id);  
+    console.log();
+
+    if(!isError){
+        if(typeof(completeText) !== "undefined" && completeText.length > 0){    
+            process.stdout.write(completeText);
+        }
+    } 
+    console.log();
 };
 
 let start = async (loadingText, completeText, data, executable) => {
@@ -41,6 +48,9 @@ let start = async (loadingText, completeText, data, executable) => {
    let results = await executable(data).then((results) => {
     halt(spinner, completeText);
     return results;
+   }).catch(err => {
+    halt(spinner, err, true);
+    throw(err);
    });
    return results;
 };

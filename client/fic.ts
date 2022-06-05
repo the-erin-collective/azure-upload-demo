@@ -50,9 +50,13 @@ program
       let output = api.list().then((data) => { return data; });
       return output;
     }).then((data) => {
-      console.log(data);}
-    );
-  });
+      return data;
+    }).catch(err => {
+      console.log(err);
+    });
+    let output = tables.spreadsheet(result, true);
+    console.log(output);}
+  );
 
 program
   .command('upload')
@@ -60,12 +64,17 @@ program
   .description('upload a file to the cloud')
   .action(async (arg, options) => {
     let filepath = 'testpath';
-    let result = await spinner.start('uploading ' +  filepath + ' to the cloud...', 'download successful!', filepath, async (filepath) => {
+    let result = await spinner.start('uploading ' +  filepath + ' to the cloud...', 'upload successful!', filepath, async (filepath) => {
       let output = api.upload(filepath).then((data) => { return data; });
       return output;
     }).then((data) => {
-      console.log(data);}
-    );
+      return data;
+    }).catch(err => {
+      console.log(err);
+    });
+    // only if no error...
+    let output = tables.simple('file uploaded', result, false);
+    console.log(output);
   });
   
 program
@@ -74,12 +83,17 @@ program
   .description('download a file from the cloud')
   .action(async (arg, options) => {
     let filename = 'testname';
-    let result = await spinner.start('downloading ' +  filename + ' from the cloud...', 'upload successful!', filename, async (filepath) => {
+    let result = await spinner.start('downloading ' +  filename + ' from the cloud...', 'download successful!', filename, async (filepath) => {
       let output = api.download(filepath).then((data) => { return data; });
       return output;
     }).then((data) => {
-      console.log(data);}
-    );
+      return data;
+    }).catch(err => {
+      console.log(err);
+    }); 
+    // only if no error...
+    let output = tables.simple('file downloaded', result, false);
+    console.log(output);
   });
 
 program.parse();
