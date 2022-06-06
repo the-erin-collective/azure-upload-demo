@@ -38,7 +38,7 @@ namespace files_in_cloud_server.Controllers
 
     [HttpPost]
     [Route("Upload")]
-    public Document Upload(Document document)
+    public Document Upload([FromBody] Document document)
     {
       document = _documentService.CreateUpdate(document);
       return document;

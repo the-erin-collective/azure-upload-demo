@@ -67,15 +67,20 @@ program
   .argument('<filepath>', 'path to file being uploaded')
   .description('upload a file to the cloud')
   .action(async (arg, options) => {
-    let filepath = 'testpath';
+    let filepath = arg;
+    let error = null;
     let result = await spinner.start('uploading ' +  filepath + ' to the cloud...', 'upload successful!', filepath, async (filepath) => {
       let output = api.upload(filepath).then((data) => { return data; });
       return output;
     }).then((data) => {
       return data;
     }).catch(err => {
-      console.log(err);
+      error = err;
     });
+    if(error){
+      console.log(tables.simple('file upload error', error, false));
+      return;
+    }
     // only if no error...
     let output = tables.simple('file uploaded', result, false);
     console.log(output);
