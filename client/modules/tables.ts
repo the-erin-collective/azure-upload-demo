@@ -25,26 +25,21 @@ let simple = (title, body, breakAfter) => {
     return table + (breakAfter ? '\n\n' : '');
 };
 
-let spreadsheet = (data, breakAfter) => {
+let spreadsheet = (titleProps, data, breakAfter) => {
     let headers = [];
     let rows = [];
-    headers.push({
-            value: "0",
-            alias: "name"
-          }, {
-            value: "1",
-            alias: "last modified"
-          }, {
-            value: "2",
-            alias: "size"
-          },
-        );
+    titleProps.forEach((title) => {
+        headers.push({
+            value: title.value,
+            alias: title.alias
+          });
+    });
     data.forEach(item => {
-        rows.push({
-            0: item.filename,
-            1: item.dateLastModified,
-            2: item.contentLength
+        let row = { };
+        titleProps.forEach((title) => {
+            row[title.value] = item[title.value];
         });
+        rows.push(row);
     });
     let table = Table(headers, rows, simpleDefaults).render();
     return table + (breakAfter ? '\n\n' : '');

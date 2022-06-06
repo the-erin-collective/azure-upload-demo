@@ -54,7 +54,11 @@ program
     }).catch(err => {
       console.log(err);
     });
-    let output = tables.spreadsheet(result, true);
+    let output = tables.spreadsheet([
+      { value: 'filename', alias: 'name'},
+      { value: 'dateLastModified', alias: 'last modified'},
+      { value: 'contentLength', alias: 'size'}]
+        , result, true);
     console.log(output);}
   );
 
