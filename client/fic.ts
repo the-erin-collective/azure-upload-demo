@@ -3,6 +3,7 @@ const tables = require('./modules/tables.ts');
 const help = require('./modules/help.ts');
 const spinner = require('./modules/spinner.ts');
 const api = require('./modules/api.ts');
+const commands = require('./modules/commands.ts');
 
 const programName = 'fic';
 
@@ -45,73 +46,18 @@ program
 program
   .command('list')
   .description('list files in the cloud')
-  .action(async (arg, options) => {
-    let result = await spinner.start('fetching list of files from the cloud...', 'list of files successfully fetched!', null, async (data) => {
-      let output = api.list().then((data) => { return data; });
-      return output;
-    }).then((data) => {
-      return data;
-    }).catch(err => {
-      console.log(err);
-    });
-    let output = tables.spreadsheet([
-      { value: 'filename', alias: 'name'},
-      { value: 'dateLastModified', alias: 'last modified'},
-      { value: 'contentLength', alias: 'size'}]
-        , result, true);
-    console.log(output);}
-  );
+  .action(commands.list);
 
 program
   .command('upload')
   .argument('<filepath>', 'path to file being uploaded')
   .description('upload a file to the cloud')
-  .action(async (arg, options) => {
-    let filepath = arg;
-    let error = null;
-    let result = await spinner.start('uploading ' +  filepath + ' to the cloud...', 'upload successful!', filepath, async (filepath) => {
-      let output = api.upload(filepath).then((data) => { return data; });
-      return output;
-    }).then((data) => {
-      return data;
-    }).catch(err => {
-      error = err;
-    });
-    if(error){
-      console.log(tables.simple('file upload error', error, false));
-      return;
-    }
-    if(result.errorMessage > 0){
-      console.log(tables.simple('file upload error', result.errorMessage, false));
-      return;
-    }
-    
-    let output = tables.spreadsheet([
-      { value: 'filename', alias: 'name'},
-      { value: 'dateLastModified', alias: 'last modified'},
-      { value: 'contentLength', alias: 'size'}]
-        ,  [result.data], true);
-
-    console.log(output);
-  });
+  .action(commands.upload);
   
 program
   .command('download')
   .argument('<filename>', 'name of file being downloaded')
   .description('download a file from the cloud')
-  .action(async (arg, options) => {
-    let filename = 'testname';
-    let result = await spinner.start('downloading ' +  filename + ' from the cloud...', 'download successful!', filename, async (filepath) => {
-      let output = api.download(filepath).then((data) => { return data; });
-      return output;
-    }).then((data) => {
-      return data;
-    }).catch(err => {
-      console.log(err);
-    }); 
-    // only if no error...
-    let output = tables.simple('file downloaded', result, false);
-    console.log(output);
-  });
+  .action(commands.download);
 
 program.parse();

@@ -26,8 +26,6 @@ let list = async () => {
       }).then((response) => {
             return response.data;
       }).catch((error) => {
-            console.log();
-            console.log(error);
             throw error;
         });
     return list;
