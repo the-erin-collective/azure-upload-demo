@@ -81,8 +81,17 @@ program
       console.log(tables.simple('file upload error', error, false));
       return;
     }
-    // only if no error...
-    let output = tables.simple('file uploaded', result, false);
+    if(result.errorMessage > 0){
+      console.log(tables.simple('file upload error', result.errorMessage, false));
+      return;
+    }
+    
+    let output = tables.spreadsheet([
+      { value: 'filename', alias: 'name'},
+      { value: 'dateLastModified', alias: 'last modified'},
+      { value: 'contentLength', alias: 'size'}]
+        ,  [result.data], true);
+
     console.log(output);
   });
   

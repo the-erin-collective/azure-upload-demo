@@ -2,6 +2,10 @@ const https = require('https');
 const axios = require('axios').default;
 const fs = require('fs');
 const path = require('path');
+const qs = require('querystring');
+const axiosFormData = require('axios-form-data');
+
+axios.interceptors.request.use(axiosFormData);
 
 const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 const validFileExtentions = ['.png', '.gif', '.jpgeg', '.jpg', '.webp', '.svg', '.bmp'];
@@ -50,39 +54,25 @@ let upload = async (filepath) => {
         throw ('only the following image formats are supported: ' + validFileExtentions.join(' '));
     }
 
-    let file = await fs.promises.readFile(fullpath, 'utf8')
-        .then((data) => {
-            return data;
-        })
-        .catch((err) => {
-            return err;
-        });
-    // , (err, data) => {
-    //     if (err) {
-    //       throw(err);
-    //     };
-    //     return data;
-    // });
-
-
-
     let doc = {
         dateCreated: stats.ctime,
         dateLastModified: stats.mtime,
         contentLength: stats.size,
-        filename: pathInfo.name,
-        data: file
+        filename: pathInfo.name + pathInfo.ext
     };
 
     let result = await axios({
         method: 'post',
         url: config.apiurl + '/upload',
-        data: { document: doc}, 
+        data: {
+            document: doc,
+            imageFile: fs.createReadStream(fullpath)
+            },
         httpsAgent: new https.Agent({  
             rejectUnauthorized: false
         }),
         headers: {
-            'Content-Type': 'application/json; charset=utf-8',
+            'Content-Type': 'multipart/form-data',
             'Accept': 'application/json'
         }
       }).then((response) => {
