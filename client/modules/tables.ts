@@ -37,12 +37,16 @@ let spreadsheet = (titleProps, data, breakAfter) => {
     data.forEach(item => {
         let row = { };
         titleProps.forEach((title) => {
-            row[title.value] = item[title.value];
+            row[title.value] = normalizeToString(item[title.value]);
         });
         rows.push(row);
     });
     let table = Table(headers, rows, simpleDefaults).render();
     return table + (breakAfter ? '\n\n' : '');
+};
+
+let normalizeToString = (strCandidate) => {
+    return '' + strCandidate;
 };
 
 module.exports = {
