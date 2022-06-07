@@ -43,7 +43,7 @@ let uploadCommand = async (arg, options) => {
       console.log(tablesModule.simple('file upload error', error, false));
       return;
     }
-    if(result.errorMessage > 0){
+    if(result.errorMessage.length > 0){
       console.log(tablesModule.simple('file upload error', result.errorMessage, false));
       return;
     }
