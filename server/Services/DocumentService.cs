@@ -20,9 +20,9 @@ namespace files_in_cloud_server.Services
 
     public Document CreateUpdate(Document document)
     {
-      document.ContentLength = document.Data.Length;
-      var fileData = document.Data;
-      if (_context.Documents.Any(d => d.Filename == document.Filename))
+      document.contentLength = document.data.Length;
+      var fileData = document.data;
+      if (_context.Documents.Any(d => d.filename == document.filename))
       {
         _context.Documents.Update(document);
       }
@@ -44,9 +44,9 @@ namespace files_in_cloud_server.Services
 
     public Document Download(string filename)
     {
-      var document = _context.Documents.First(d => d.Filename == filename);
+      var document = _context.Documents.First(d => d.filename == filename);
       // todo, get data from azure
-      document.Data = new byte[] { };
+      document.data = new byte[] { };
       return document;
     }
   }

@@ -1,15 +1,17 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace files_in_cloud_server.Models
 {
   public class Document
   {
-    public DateTimeOffset DateCreated { get; set; }
-    public DateTimeOffset DateLastModified { get; set; }
-    public long ContentLength { get; set; }
-    public string Filename { get; set; }
+    public DateTimeOffset dateCreated { get; set; }
+    public DateTimeOffset dateLastModified { get; set; }
+    public long contentLength { get; set; }
+    [Key]
+    public string filename { get; set; }
     [NotMapped]
-    public byte[] Data { get; set; }
+    public byte[] data { get; set; }
   }
 }

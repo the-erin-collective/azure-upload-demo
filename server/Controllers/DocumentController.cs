@@ -1,7 +1,11 @@
-﻿using files_in_cloud_server.Models;
+﻿using azure_upload_demo_server.Models;
+using files_in_cloud_server.Models;
 using files_in_cloud_server.Services;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,10 +42,31 @@ namespace files_in_cloud_server.Controllers
 
     [HttpPost]
     [Route("Upload")]
-    public Document Upload([FromBody] Document document)
+    public UploadResponse Upload(IFormCollection data, IFormFile imageFile)
     {
-      document = _documentService.CreateUpdate(document);
-      return document;
+      var response = new UploadResponse() { 
+        data = null,
+        errorMessage = ""
+      };
+      try
+      {
+        var document = new Document()
+        {
+          filename = data["document.filename"],
+          contentLength = long.Parse(data["document.contentLength"]),
+          dateCreated = DateTime.Parse(data["document.dateCreated"]),
+          dateLastModified = DateTime.Parse(data["document.dateLastModified"])
+        };
+        response.data = document;
+      }
+      catch (Exception ex)
+      {
+        response.errorMessage = ex.Message;
+        response.data = null;
+        return response;
+      }
+
+      return response;
     }
 
     [HttpPost]
