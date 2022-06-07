@@ -1,7 +1,6 @@
 const { Command } = require('commander');
 const tables = require('./modules/tables.ts');
 const help = require('./modules/help.ts');
-const spinner = require('./modules/spinner.ts');
 const api = require('./modules/api.ts');
 const commands = require('./modules/commands.ts');
 

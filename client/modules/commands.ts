@@ -4,7 +4,7 @@ const apiModule = require('./api.ts');
 
 let listCommand = async (arg, options) => {
     let error = null;
-    let result = await spinnerModule.start('fetching list of files from the cloud...', 'list of files successfully fetched!', null, async (data) => {
+    let result = await spinnerModule.start('fetching list of files from the cloud...', 'list of files successfully fetched!', 'could not get list of files from the cloud...\n:(', null, async (data) => {
     let output = apiModule.list().then((data) => { return data; });
       return output;
     }).then((data) => {
@@ -31,7 +31,7 @@ let listCommand = async (arg, options) => {
 let uploadCommand = async (arg, options) => {
     let filepath = arg;
     let error = null;
-    let result = await spinnerModule.start('uploading ' +  filepath + ' to the cloud...', 'upload successful!', filepath, async (filepath) => {
+    let result = await spinnerModule.start('uploading ' +  filepath + ' to the cloud...', 'upload successful!', 'an error occurred while trying to upload the file to the cloud...\n:(', filepath, async (filepath) => {
       let output = apiModule.upload(filepath).then((data) => { return data; });
       return output;
     }).then((data) => {
@@ -59,7 +59,7 @@ let uploadCommand = async (arg, options) => {
 
 let downloadCommand = async (arg, options) => {
     let filename = 'testname';
-    let result = await spinnerModule.start('downloading ' +  filename + ' from the cloud...', 'download successful!', filename, async (filepath) => {
+    let result = await spinnerModule.start('downloading ' +  filename + ' from the cloud...', 'download successful!', 'an error occurred whyle trying to download the file from the cloud...\n:(', filename, async (filepath) => {
       let output = apiModule.download(filepath).then((data) => { return data; });
       return output;
     }).then((data) => {

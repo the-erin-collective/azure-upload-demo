@@ -51,7 +51,7 @@ let halt = (spinner, completeText, isError = false) => {
     } 
 };
 
-let start = async (loadingText, completeText, data, executable) => {
+let start = async (loadingText, completeText, failureText, data, executable) => {
    let spinner = spin({ frames: spinners['dots'].frames, interval: spinners['dots'].interval * _intervalMultiplier, loadingText: loadingText });
    let results = await executable(data).then((results) => {
         let errorInResultModel = (results == null || results.data == null || (results.errorMessage && results.errorMessage.length > 0));
@@ -61,7 +61,7 @@ let start = async (loadingText, completeText, data, executable) => {
         if(errorInResultModel){
             results.data = null;
             if(!(results.errorMessage) || results.errorMessage.length === 0){
-                results.errorMessage = 'no data to return';
+                results.errorMessage = failureText;
                 results.data = null;
             }
         }
