@@ -4,7 +4,7 @@ const apiModule = require('./api.ts');
 
 let listCommand = async (arg, options) => {
     let error = null;
-    let result = await spinnerModule.start('fetching list of files from the cloud...', 'list of files successfully fetched!', 'could not get list of files from the cloud...\n:(', null, async (data) => {
+    let result = await spinnerModule.start('fetching list of files from the cloud...', 'list of files successfully fetched!', 'could not get the list of files from the cloud...\n:(', null, async (data) => {
     let output = apiModule.list().then((data) => { return data; });
       return output;
     }).then((data) => {
