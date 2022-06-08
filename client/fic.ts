@@ -21,9 +21,10 @@ program
 program
   .configureHelp({
   formatHelp: (cmd, helper) => { 
-    let header = 'help: ' + cmd._name;
-    if(cmd._name === programName){
+    let header = 'help: ' + cmd._name + ' ' + cmd.args.join(' ');
+    if(cmd._name === programName && (cmd.args.length > 0 && cmd.args[0] !== 'help')){
       header = 'Unrecognized command, try one of these...';
+    
     }
     return tables.simple(header, help.formatHelp(cmd, helper).trim(), true);
    }
