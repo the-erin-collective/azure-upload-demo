@@ -4,8 +4,33 @@ const apiModule = require('./api.ts');
 
 let listCommand = async (arg, options) => {
     let error = null;
-    let result = await spinnerModule.start('fetching list of files from the cloud...', 'list of files successfully fetched!', 'could not get the list of files from the cloud...\n:(', null, async (data) => {
-    let output = apiModule.list().then((data) => { return data; });
+    let result = await spinnerModule.start(
+            'fetching list of files from the cloud...', 
+            'list of files successfully fetched!', 
+            'could not get the list of files from the cloud...\n:(', 
+            (results) => {
+                if(results == null)
+                {
+                    return false;
+                }
+                if(results.length == null)
+                {
+                    return false;
+                }
+                if(results.errorMessage && results.errorMessage.length > 0)
+                {
+                    return false;
+                }
+                return true;
+            },            
+            null, 
+            async (data) => {
+                let output = apiModule.list()
+                .then((data) => { 
+                    return data;
+                }).catch(err => {
+                    error = err;
+                });
       return output;
     }).then((data) => {
       return data;
@@ -31,19 +56,40 @@ let listCommand = async (arg, options) => {
 let uploadCommand = async (arg, options) => {
     let filepath = arg;
     let error = null;
-    let result = await spinnerModule.start('uploading ' +  filepath + ' to the cloud...', 'upload successful!', 'an error occurred while trying to upload the file to the cloud...\n:(', filepath, async (filepath) => {
-      let output = apiModule.upload(filepath)
-        .then((data) => { 
-            return data;
-        }).catch(err => {
-           return { errorMessage: err, data: null};
-        });
-      return output;
-    }).then((data) => {
-      return data;
-    }).catch(err => {
-      error = err;
-    });
+    let result = await spinnerModule.start(
+            'uploading ' +  filepath + ' to the cloud...', 
+            'upload successful!', 
+            'an error occurred while trying to upload the file to the cloud...\n:(', 
+            (results) => {
+                if(results == null)
+                {
+                    return false;
+                }
+                if(results.data == null)
+                {
+                    return false;
+                }
+                if(results.errorMessage && results.errorMessage.length > 0)
+                {
+                    return false;
+                }
+                return true;
+            },            
+            filepath, 
+            async (filepath) => {
+                let output = apiModule.upload(filepath)
+                    .then((data) => { 
+                        return data;
+                    })
+                    .catch(err => {
+                        return { errorMessage: err, data: null};
+                    });
+                return output;
+            }).then((data) => {
+                return data;
+            }).catch(err => {
+                error = err;
+            });
     if(error){
       console.log(tablesModule.simple('file upload error', error, false));
       return;
@@ -67,14 +113,40 @@ let uploadCommand = async (arg, options) => {
 
 let downloadCommand = async (arg, options) => {
     let filename = 'testname';
-    let result = await spinnerModule.start('downloading ' +  filename + ' from the cloud...', 'download successful!', 'an error occurred whyle trying to download the file from the cloud...\n:(', filename, async (filepath) => {
-      let output = apiModule.download(filepath).then((data) => { return data; });
-      return output;
-    }).then((data) => {
-      return data;
-    }).catch(err => {
-      console.log(err);
-    }); 
+    let result = await spinnerModule.start(
+            'downloading ' +  filename + ' from the cloud...', 
+            'download successful!', 
+            'an error occurred whyle trying to download the file from the cloud...\n:(',
+            (results) => {
+                if(results == null)
+                {
+                    return false;
+                }
+                if(results.length == null)
+                {
+                    return false;
+                }
+                if(results.errorMessage && results.errorMessage.length > 0)
+                {
+                    return false;
+                }
+                return true;
+            },                
+            filename, 
+            async (filepath) => {
+                let output = apiModule.download(filepath)
+                    .then((data) => { 
+                        return data; 
+                    })  
+                    .catch(err => {
+                        return { errorMessage: err, data: null};
+                    });
+                return output;
+            }).then((data) => {
+               return data;
+            }).catch(err => {
+                console.log(err);
+            }); 
     // only if no error...
     let output = tablesModule.simple('file downloaded', result, false);
     console.log(output);

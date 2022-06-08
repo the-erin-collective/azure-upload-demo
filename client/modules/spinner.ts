@@ -48,17 +48,18 @@ let halt = (spinner, completeText, isError = false) => {
         if(typeof(completeText) !== "undefined" && completeText.length > 0){    
             process.stdout.write(completeText);
         }
+        console.log();
     } 
 };
 
-let start = async (loadingText, completeText, failureText, data, executable) => {
+let start = async (loadingText, completeText, failureText, resultValidation, data, executable) => {
    let spinner = spin({ frames: spinners['dots'].frames, interval: spinners['dots'].interval * _intervalMultiplier, loadingText: loadingText });
    let results = await executable(data).then((results) => {
-        let errorInResultModel = (results == null || results.data == null || (results.errorMessage && results.errorMessage.length > 0));
+        let resultModelIsValid = resultValidation(results);
        
-        halt(spinner, completeText, errorInResultModel);
+        halt(spinner, completeText, !resultModelIsValid);
        
-        if(errorInResultModel){
+        if(!resultModelIsValid){
             results.data = null;
             if(!(results.errorMessage) || results.errorMessage.length === 0){
                 results.errorMessage = failureText;
