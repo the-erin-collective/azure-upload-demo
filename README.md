@@ -28,12 +28,15 @@ The `apiurl` property should point to the server's endpoint (default for dev is 
 The `outputPath` property points to the directory path where files that are downloaded from the cloud will be saved. The default value is `"./output"` 
 
 Then in that same directory run the command:
+
 `node fic.ts`
 
 This will run the app without any arguments prompting it to display help information, like which commands can be used and what they're parameters are.
 
 The same information will be shown by using the command:
+
 `node fic.ts help`
 
 And for more detail on a specific command add the `-h` option to your command, for example to get help on the list command use...
+
 `node fic.ts list -h`
