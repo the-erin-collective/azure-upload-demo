@@ -1,4 +1,4 @@
-﻿using azure_upload_demo_server.Models;
+﻿using files_in_cloud_server.Helpers;
 using files_in_cloud_server.Models;
 using files_in_cloud_server.Services;
 using Microsoft.AspNetCore.Cors;
@@ -34,15 +34,15 @@ namespace files_in_cloud_server.Controllers
 
     [HttpPost, HttpGet]
     [Route("ListAll")]
-    public IEnumerable<Document> ListAll()
+    public async Task<IEnumerable<Document>> ListAll()
     {
-      var documents = _documentService.ListAll();
+      var documents = await _documentService.ListAll();
       return documents;
     }
 
     [HttpPost]
     [Route("Upload")]
-    public UploadResponse Upload(IFormCollection data, IFormFile imageFile)
+    public async Task<UploadResponse> Upload(IFormCollection data, IFormFile imageFile)
     {
       var response = new UploadResponse() { 
         data = null,
@@ -50,14 +50,28 @@ namespace files_in_cloud_server.Controllers
       };
       try
       {
-        var document = new Document()
+        var errorMessage = ValidationHelper.ValidateDocumentFormCollection(data);
+        if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+          response.errorMessage = errorMessage;
+          return response;
+        }
+
+        var savedDoc = await _documentService.CreateUpdate(new Document()
         {
           filename = data["document.filename"],
           contentLength = long.Parse(data["document.contentLength"]),
           dateCreated = DateTime.Parse(data["document.dateCreated"]),
           dateLastModified = DateTime.Parse(data["document.dateLastModified"])
-        };
-        response.data = document;
+        }, imageFile);
+
+        if(!string.IsNullOrWhiteSpace(savedDoc.errorMessage)){
+          response.errorMessage = savedDoc.errorMessage;
+          return response;
+        } else {
+          response.data = savedDoc.data;
+          return response;
+        }
       }
       catch (Exception ex)
       {
@@ -65,15 +79,13 @@ namespace files_in_cloud_server.Controllers
         response.data = null;
         return response;
       }
-
-      return response;
     }
 
     [HttpPost]
     [Route("Download")]
-    public Document Download(string documentId)
+    public async Task<Document> Download(string documentId)
     {
-      return _documentService.Download(documentId);
+      return await _documentService.Download(documentId);
     }
   }
 }

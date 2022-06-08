@@ -1,10 +1,9 @@
-﻿using files_in_cloud_server.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace azure_upload_demo_server.Models
+namespace files_in_cloud_server.Models
 {
   public class UploadResponse
   {

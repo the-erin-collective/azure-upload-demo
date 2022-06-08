@@ -17,6 +17,7 @@ using SimpleInjector;
 using SimpleInjector.Integration.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using files_in_cloud_server.Controllers;
+using azure_upload_demo_server.Models;
 
 namespace files_in_cloud_server
 {
@@ -43,6 +44,7 @@ namespace files_in_cloud_server
         options.AddAspNetCore()
           .AddControllerActivation();
       });
+      services.Configure<AppConfig>(Configuration.GetSection("AzureBlobStorage"));
       services.AddDbContext<Context>();
     }
 
