@@ -1,3 +1,4 @@
 {
-    "apiurl" : "http://localhost:3001/document"
+    "apiurl" : "http://localhost:3001/document",
+    "outputPath" : "./output"
 }
