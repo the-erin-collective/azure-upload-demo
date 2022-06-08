@@ -21,7 +21,7 @@ The client is a node.js console application that is used from within the termina
 
 Make sure the latest version of node.js is installed, then open a terminal in the `client` directory and run the command `npm install` to install dependencies.
 
-If applicable, you can configure the app by editting the file `/server/appsettings.json` 
+If applicable, you can configure the app by editting the file `/client/config.json` 
 
 The `apiurl` property should point to the server's endpoint (default for dev is `https://localhost:3001`, eg server's appsettings app url).
 
