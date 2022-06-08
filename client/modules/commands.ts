@@ -32,7 +32,12 @@ let uploadCommand = async (arg, options) => {
     let filepath = arg;
     let error = null;
     let result = await spinnerModule.start('uploading ' +  filepath + ' to the cloud...', 'upload successful!', 'an error occurred while trying to upload the file to the cloud...\n:(', filepath, async (filepath) => {
-      let output = apiModule.upload(filepath).then((data) => { return data; });
+      let output = apiModule.upload(filepath)
+        .then((data) => { 
+            return data;
+        }).catch(err => {
+           return { errorMessage: err, data: null};
+        });
       return output;
     }).then((data) => {
       return data;
@@ -47,7 +52,10 @@ let uploadCommand = async (arg, options) => {
       console.log(tablesModule.simple('file upload error', result.errorMessage, false));
       return;
     }
-    
+    if(result.data == null){
+        console.log(tablesModule.simple('file upload error', 'the files-in-cloud server is behaving odd', false));
+        return;
+    }
     let output = tablesModule.spreadsheet([
       { value: 'filename', alias: 'name'},
       { value: 'dateLastModified', alias: 'last modified'},
