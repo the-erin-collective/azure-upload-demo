@@ -8,7 +8,7 @@ const axiosFormData = require('axios-form-data');
 axios.interceptors.request.use(axiosFormData);
 
 const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
-const validFileExtentions = ['.png', '.gif', '.jpgeg', '.jpg', '.webp', '.svg', '.bmp'];
+const validFileExtentions = ['.png', '.gif', '.jpeg', '.jpg', '.webp', '.svg', '.bmp'];
 
 let list = async () => {
     let list = await axios({
@@ -32,8 +32,8 @@ let list = async () => {
 };
 
 let upload = async (filepath) => {
-    let fullpath = path.join(__dirname + '/..' + filepath);
-    let exists = await fs.promises.access(fullpath)
+    let fullpath = filepath;
+    let exists = await fs.promises.access(filepath)
         .then(() => {
             return true;
         })
